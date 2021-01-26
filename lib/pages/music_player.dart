@@ -25,6 +25,7 @@ class MusicPlayerState extends State<MusicPlayer> {
     // TODO: implement initState
     super.initState();
     setSong(widget.songInfo);
+    print("now playing: " + widget.songInfo.title);
   }
 
   void dispose() {

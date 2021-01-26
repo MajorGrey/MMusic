@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:MusicApp/pages/homepage.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class WelcomeScreen extends StatefulWidget {
   @override
@@ -11,13 +12,25 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   @override
   void initState() {
     super.initState();
+    getPermission();
+  }
 
-    Timer(
-        Duration(seconds: 3),
-        () => Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => HomePage()),
-            ));
+  getPermission() async {
+    print('Hello');
+    if (await Permission.storage.request().isGranted) {
+      var a = await Permission.storage.status;
+      print(a);
+
+      Timer(
+          Duration(seconds: 3),
+          () => Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => HomePage()),
+              ));
+    }
+    // if (await Permission.storage.isPermanentlyDenied) {
+    //   openAppSettings();
+    // }
   }
 
   @override

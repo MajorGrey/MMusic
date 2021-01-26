@@ -21,23 +21,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        backgroundColor: Color(0xff000000),
-        title: Row(
-          children: [
-            Icon(
-              Icons.music_note_outlined,
-              color: Colors.green,
-            ),
-            Text(
-              "MMusic",
-              style:
-                  TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
-            ),
-          ],
-        ),
-      ),
       backgroundColor: Colors.black,
       body: _page[current_index],
       bottomNavigationBar: BubbleBottomBar(
@@ -59,31 +42,34 @@ class _HomePageState extends State<HomePage> {
               ),
               activeIcon: Icon(
                 Icons.home,
-                color: Colors.green,
+                color: Colors.white,
               ),
-              title: Text("Home")),
+              title: Text(
+                "Home",
+                style: TextStyle(color: Colors.white),
+              )),
           BubbleBottomBarItem(
-              backgroundColor: Colors.deepPurple,
+              backgroundColor: Colors.green,
               icon: Icon(
                 Icons.music_note,
                 color: Colors.grey,
               ),
               activeIcon: Icon(
                 Icons.music_note,
-                color: Colors.deepPurple,
+                color: Colors.white,
               ),
-              title: Text("Music")),
+              title: Text("Music", style: TextStyle(color: Colors.white))),
           BubbleBottomBarItem(
-              backgroundColor: Colors.indigo,
+              backgroundColor: Colors.green,
               icon: Icon(
                 Icons.folder_open,
                 color: Colors.grey,
               ),
               activeIcon: Icon(
                 Icons.folder_open,
-                color: Colors.indigo,
+                color: Colors.white,
               ),
-              title: Text("Folders")),
+              title: Text("Folders", style: TextStyle(color: Colors.white))),
           BubbleBottomBarItem(
               backgroundColor: Colors.green,
               icon: Icon(
@@ -92,9 +78,9 @@ class _HomePageState extends State<HomePage> {
               ),
               activeIcon: Icon(
                 Icons.search,
-                color: Colors.green,
+                color: Colors.white,
               ),
-              title: Text("Menu"))
+              title: Text("Menu", style: TextStyle(color: Colors.white)))
         ],
       ),
     );

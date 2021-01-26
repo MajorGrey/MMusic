@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:MusicApp/music_player.dart';
+import 'package:MusicApp/pages/music_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_audio_query/flutter_audio_query.dart';
 
