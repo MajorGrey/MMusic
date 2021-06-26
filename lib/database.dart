@@ -1,24 +1,27 @@
-import 'dart:io';
-
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:path_provider/path_provider.dart';
 
 class Db {
-  static final _databaseName = "database.db";
-  static final _databaseVersion = 1;
+  final int id;
+  final String name;
+  final dynamic value;
 
-  static final table = 'data';
+  Db({this.id, this.name, this.value});
 
-  static final columnId = 'id';
-  static String columnName = 'name';
-  static dynamic columnValue = 'value';
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'value': value,
+    };
+  }
 
-  // make this a singleton class
-  Db._privateConstructor();
-  static final Db instance = Db._privateConstructor();
+  // Implement toString to make it easier to see information
+  @override
+  String toString() {
+    return 'Db{id: $id, name: $name, value: $value}';
+  }
 
-  // only have a single app-wide reference to the database
   static Database _database;
   Future<Database> get database async {
     if (_database != null) return _database;
@@ -29,60 +32,96 @@ class Db {
 
   // this opens the database (and creates it if it doesn't exist)
   _initDatabase() async {
-    Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, _databaseName);
-    return await openDatabase(path,
-        version: _databaseVersion, onCreate: _onCreate);
+    return await openDatabase(
+      join(await getDatabasesPath(), 'test_database.db'),
+      // When the database is first created, create a table to store dogs.
+      onCreate: (db, version) {
+        return db.execute(
+          "CREATE TABLE test_data(id INTEGER PRIMARY KEY, name TEXT, value TEXT)",
+        );
+      },
+      // Set the version. This executes the onCreate function and provides a
+      // path to perform database upgrades and downgrades.
+      version: 1,
+    );
   }
 
-  // SQL code to create the database table
-  Future _onCreate(Database db, int version) async {
-    await db.execute('''
-          CREATE TABLE $table (
-            $columnId INTEGER PRIMARY KEY,
-            $columnName TEXT NOT NULL,
-            $columnValue INTEGER NOT NULL
-          )
-          ''');
+  Future<void> insert(Db data) async {
+    // Get a reference to the database.
+    final Database db = await database;
+
+    // Insert the Dog into the correct table. Also specify the
+    // `conflictAlgorithm`. In this case, if the same dog is inserted
+    // multiple times, it replaces the previous data.
+    await db.insert(
+      'test_data',
+      data.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
-  // Helper methods
+  Future<List<Db>> datas() async {
+    // Get a reference to the database.
+    final Database db = await database;
 
-  // Inserts a row in the database where each key in the Map is a column name
-  // and the value is the column value. The return value is the id of the
-  // inserted row.
-  Future<int> insert(Map<String, dynamic> row) async {
-    Database db = await instance.database;
-    return await db.insert(table, row);
+    // Query the table for all .
+    final List<Map<String, dynamic>> maps = await db.query('test_data');
+
+    // Convert the List<Map<String, dynamic> into a List<Dog>.
+    return List.generate(maps.length, (i) {
+      return Db(
+        id: maps[i]['id'],
+        name: maps[i]['name'],
+        value: maps[i]['value'],
+      );
+    });
   }
 
-  // All of the rows are returned as a list of maps, where each map is
-  // a key-value list of columns.
-  Future<List<Map<String, dynamic>>> queryAllRows() async {
-    Database db = await instance.database;
-    return await db.query(table);
+  Future<void> update(Db data) async {
+    // Get a reference to the database.
+    final db = await database;
+
+    // Update the given Dog.
+    await db.update(
+      'test_data',
+      data.toMap(),
+      // Ensure that the Dog has a matching id.
+      where: "id = ?",
+      // Pass the Dog's id as a whereArg to prevent SQL injection.
+      whereArgs: [data.id],
+    );
   }
 
-  // All of the methods (insert, query, update, delete) can also be done using
-  // raw SQL commands. This method uses a raw query to give the row count.
-  Future<int> queryRowCount() async {
-    Database db = await instance.database;
-    return Sqflite.firstIntValue(
-        await db.rawQuery('SELECT COUNT(*) FROM $table'));
+  Future<void> deleteById(id) async {
+    // Get a reference to the database.
+    final db = await database;
+
+    // Remove the Dog from the database.
+    await db.delete(
+      'test_data',
+      // Use a `where` clause to delete a specific dog.
+      where: "id = ?",
+      // Pass the Dog's id as a whereArg to prevent SQL injection.
+      whereArgs: [id],
+    );
   }
 
-  // We are assuming here that the id column in the map is set. The other
-  // column values will be used to update the row.
-  Future<int> update(Map<String, dynamic> row) async {
-    Database db = await instance.database;
-    int id = row[columnId];
-    return await db.update(table, row, where: '$columnId = ?', whereArgs: [id]);
-  }
+  // // Insert a dog into the database.
+  // await insert(fido);
 
-  // Deletes the row specified by the id. The number of affected rows is
-  // returned. This should be 1 as long as the row exists.
-  Future<int> delete(int id) async {
-    Database db = await instance.database;
-    return await db.delete(table, where: '$columnId = ?', whereArgs: [id]);
-  }
+  // // Print the list of dogs (only Fido for now).
+  // print(await dogs());
+
+  // // Update Fido's age and save it to the database.
+
+  // await updateDog(fido);
+
+  // // Print Fido's updated information.
+  // print(await dogs());
+
+  // // Delete Fido from the database.
+  // await deleteDog(fido.id);
+
+  // // Print the list of dogs (empty).
+  // print(await dogs());
 }
