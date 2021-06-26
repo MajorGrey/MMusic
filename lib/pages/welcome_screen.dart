@@ -1,7 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:MusicApp/pages/homepage.dart';
+import 'package:MusicApp/pages/tracks.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_audio_query/flutter_audio_query.dart';
 import 'package:permission_handler/permission_handler.dart';
+import "package:MusicApp/database.dart";
 
 class WelcomeScreen extends StatefulWidget {
   @override
@@ -9,24 +13,46 @@ class WelcomeScreen extends StatefulWidget {
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
+  final FlutterAudioQuery audioQuery = FlutterAudioQuery();
+  final db = Db();
   @override
   void initState() {
     super.initState();
     getPermission();
+    getSongs();
+  }
+
+  Future getSongs() async {
+    List songs = await audioQuery.getSongs();
+    // print(songs);
+    saveSongs(songs);
+
+    Timer(
+        Duration(seconds: 1),
+        () => Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => Tracks()),
+            ));
+  }
+
+  saveSongs(songs) async {
+    // var d = Db(
+    //   id: 1,
+    //   name: 'all_songs',
+    //   value: songs,
+    // );
+    // await db.insert(d);
+    // var p = await db.datas();
+    // var r = p[1].value;
+    // var o = jsonDecode(r);
+    // print(o);
+    print(songs);
   }
 
   getPermission() async {
-    print('Hello');
     if (await Permission.storage.request().isGranted) {
       var a = await Permission.storage.status;
       print(a);
-
-      Timer(
-          Duration(seconds: 3),
-          () => Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => HomePage()),
-              ));
     }
     // if (await Permission.storage.isPermanentlyDenied) {
     //   openAppSettings();
