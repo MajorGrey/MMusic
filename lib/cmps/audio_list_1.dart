@@ -30,6 +30,16 @@ class _AudioListsState extends State<AudioLists> {
     key.currentState.setSong(widget.songs[CurrentIndex]);
   }
 
+  play(i) {
+    CurrentIndex = i;
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => MusicPlayer(
+              changeTrack: changeTrack,
+              songInfo: widget.songs[CurrentIndex],
+              key: key,
+            )));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(

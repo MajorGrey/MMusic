@@ -74,7 +74,6 @@ class MusicPlayerState extends State<MusicPlayer> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
         leading: IconButton(
             onPressed: () {
               Navigator.of(context).pop();
@@ -127,9 +126,10 @@ class MusicPlayerState extends State<MusicPlayer> {
               child: Text(
                 widget.songInfo.title,
                 style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.w600),
+                  color: Colors.white,
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
             Container(
@@ -138,7 +138,7 @@ class MusicPlayerState extends State<MusicPlayer> {
                 widget.songInfo.artist,
                 style: TextStyle(
                     color: Colors.green,
-                    fontSize: 12.0,
+                    fontSize: 16.0,
                     fontWeight: FontWeight.w500),
               ),
             ),

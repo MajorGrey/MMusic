@@ -21,6 +21,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // appBar: ,
       backgroundColor: Colors.black,
       body: _page[current_index],
       bottomNavigationBar: BubbleBottomBar(

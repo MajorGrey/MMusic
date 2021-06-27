@@ -18,6 +18,9 @@ class MyApp extends StatelessWidget {
       title: 'MMusic',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        appBarTheme: AppBarTheme(
+          brightness: Brightness.dark,
+        ),
         primarySwatch: Colors.green,
         accentColor: Colors.green,
         canvasColor: Colors.black,

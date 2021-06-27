@@ -1,20 +1,27 @@
 import 'package:MusicApp/cmps/audio_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_audio_query/flutter_audio_query.dart';
 import 'package:scroll_app_bar/scroll_app_bar.dart';
 
 class Tracks extends StatefulWidget {
-  final songs;
-  Tracks({this.songs});
+  // final songs;
+  // Tracks({this.songs});
   @override
   _TracksState createState() => _TracksState();
 }
 
 class _TracksState extends State<Tracks> {
   final controller = ScrollController();
-
+  final FlutterAudioQuery audioQuery = FlutterAudioQuery();
+  List songs;
   @override
   void initState() {
     super.initState();
+    getSongs();
+  }
+
+  Future getSongs() async {
+    songs = await audioQuery.getSongs();
   }
 
   @override
@@ -55,9 +62,11 @@ class _TracksState extends State<Tracks> {
         ),
         child: Padding(
           padding: EdgeInsets.only(top: 8.0),
-          child: AudioLists(
-            songs: widget.songs,
-          ),
+          child: songs == null
+              ? Text('Loading', style: TextStyle(color: Colors.white))
+              : AudioLists(
+                  songs: songs,
+                ),
         ),
       ),
     );

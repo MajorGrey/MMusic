@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:MusicApp/pages/homepage.dart';
-import 'package:MusicApp/pages/tracks.dart';
+import 'package:MusicApp/pages/tracks_old.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_audio_query/flutter_audio_query.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -19,7 +19,18 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   void initState() {
     super.initState();
     getPermission();
-    getSongs();
+    // getSongs();
+  }
+
+  getPermission() async {
+    if (await Permission.storage.request().isGranted) {
+      var a = await Permission.storage.status;
+      print(a);
+      await getSongs();
+    }
+    if (await Permission.storage.isPermanentlyDenied) {
+      openAppSettings();
+    }
   }
 
   Future getSongs() async {
@@ -46,17 +57,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     // var r = p[1].value;
     // var o = jsonDecode(r);
     // print(o);
-    print(songs);
-  }
-
-  getPermission() async {
-    if (await Permission.storage.request().isGranted) {
-      var a = await Permission.storage.status;
-      print(a);
-    }
-    // if (await Permission.storage.isPermanentlyDenied) {
-    //   openAppSettings();
-    // }
+    // print(songs);
   }
 
   @override

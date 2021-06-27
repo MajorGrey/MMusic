@@ -32,12 +32,13 @@ dependencies:
   bubble_bottom_bar: ^1.2.0
   permission_handler: ^5.0.1+1
   draggable_scrollbar: ^0.1.0
-  path_provider: ^1.6.7
-  flutter_file_utils: ^0.1.1
+  path_provider: ^1.6.11
+  flutter_file_utils: ^0.1.1+5
   sqflite: ^2.0.0+3
   scroll_app_bar: ^1.0.3
   vs_scrollbar: ^0.2.0
   sliding_up_panel: ^2.0.0+1
+  shimmer: ^2.0.0
 
 dev_dependencies:
   flutter_test:
